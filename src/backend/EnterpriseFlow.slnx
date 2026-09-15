@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/API/">
+    <Project Path="API/EnterpriseFlow.API.csproj" />
+  </Folder>
+  <Folder Name="/Domain/">
+    <Project Path="Domain/EnterpriseFlow.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Infra/">
+    <Project Path="Infra/EnterpriseFlow.Infra.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/EnterpriseFlow.Tests.csproj" />
+  </Folder>
+</Solution>
