@@ -1,0 +1,53 @@
+name: Deploy API to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/backend/**"
+      - ".github/workflows/deploy-api.yml"
+
+env:
+  AZURE_WEBAPP_NAME: app-enterpriseflow-api-dev
+  DOTNET_VERSION: "8.0.x"
+  # Ajuste se o caminho do projeto/solução mudar.
+  WORKING_DIRECTORY: src/backend
+  PROJECT_PATH: src/backend/API/EnterpriseFlow.API.csproj
+  PUBLISH_OUTPUT_PATH: ${{ github.workspace }}/publish
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restaurar dependências
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: dotnet restore ${{ env.PROJECT_PATH }}
+
+      - name: Build (Release)
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
+
+      - name: Publish
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: >
+          dotnet publish ${{ env.PROJECT_PATH }}
+          --configuration Release
+          --no-build
+          --output ${{ env.PUBLISH_OUTPUT_PATH }}
+
+      - name: Deploy no Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_API }}
+          package: ${{ env.PUBLISH_OUTPUT_PATH }}

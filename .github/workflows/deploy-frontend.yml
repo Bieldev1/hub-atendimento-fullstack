@@ -1,0 +1,56 @@
+name: Deploy Frontend to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/frontend/**"
+      - ".github/workflows/deploy-frontend.yml"
+
+env:
+  AZURE_WEBAPP_NAME: app-enterpriseflow-frontend-dev
+  NODE_VERSION: "22.x"
+  # Ajuste se o caminho da aplicação Next.js mudar.
+  WORKING_DIRECTORY: src/frontend
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
+
+      - name: Instalar dependências
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm ci
+
+      - name: Build (Next.js)
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run build
+
+      # O projeto usa output: "standalone" (next.config.ts), então o pacote de deploy
+      # precisa reunir o server standalone + os assets estáticos + a pasta public.
+      - name: Montar pacote de deploy (standalone output)
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          mkdir -p deploy-package
+          cp -r .next/standalone/. deploy-package/
+          mkdir -p deploy-package/.next
+          cp -r .next/static deploy-package/.next/static
+          cp -r public deploy-package/public
+
+      - name: Deploy no Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_FRONTEND }}
+          package: ${{ env.WORKING_DIRECTORY }}/deploy-package
