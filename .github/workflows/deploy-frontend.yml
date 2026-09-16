@@ -11,7 +11,7 @@ on:
 env:
   AZURE_WEBAPP_NAME: app-enterpriseflow-frontend-dev
   NODE_VERSION: "22.x"
-  # Ajuste se o caminho da aplicação Next.js mudar.
+  # WORKING_DIRECTORY: raiz do app Next.js. Todos os passos abaixo rodam relativos a esta pasta.
   WORKING_DIRECTORY: src/frontend
 
 jobs:
