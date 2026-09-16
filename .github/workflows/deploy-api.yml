@@ -11,9 +11,9 @@ on:
 env:
   AZURE_WEBAPP_NAME: app-enterpriseflow-api-dev
   DOTNET_VERSION: "8.0.x"
-  # Ajuste se o caminho do projeto/solução mudar.
+  # Ajuste se o caminho do projeto/solução mudar. PROJECT_PATH é relativo ao WORKING_DIRECTORY.
   WORKING_DIRECTORY: src/backend
-  PROJECT_PATH: src/backend/API/EnterpriseFlow.API.csproj
+  PROJECT_PATH: API/EnterpriseFlow.API.csproj
   PUBLISH_OUTPUT_PATH: ${{ github.workspace }}/publish
 
 jobs:
