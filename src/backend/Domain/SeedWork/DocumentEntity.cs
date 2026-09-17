@@ -1,10 +1,10 @@
 namespace EnterpriseFlow.Domain.SeedWork;
 
 /// <summary>
-/// Classe base para entidades do domínio. Não declara Id: cada entidade concreta declara
-/// o próprio Id (normalmente long), já que o tipo/geração da chave varia por agregado.
+/// Classe base para agregados persistidos como documento (ex.: MongoDB). Assim como
+/// <see cref="Entity"/>, não declara Id: o agregado concreto declara o próprio Id (string).
 /// </summary>
-public abstract class Entity : IEntity
+public abstract class DocumentEntity : IEntity
 {
     private readonly List<IDomainEvent> domainEvents = new();
 

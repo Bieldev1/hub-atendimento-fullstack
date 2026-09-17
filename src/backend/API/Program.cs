@@ -9,6 +9,7 @@ builder.ConfigureLog();
 builder.Services.AddControllers();
 builder.Services.ConfigureSwagger();
 builder.Services.ConfigureDependencyInjection(builder.Configuration);
+builder.Services.ConfigureMongo(builder.Configuration);
 builder.Services.ConfigureCors(builder.Configuration);
 builder.Services.ConfigureHealthChecks();
 

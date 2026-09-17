@@ -14,4 +14,16 @@ public class Result<T> : Result
     public static Result<T> Ok(T value, string? message = null) => (Result<T>)new Result<T>(value).Set(ResultCode.Ok, message);
 
     public static new Result<T> Fail(ResultCode code, string message) => (Result<T>)new Result<T>().Set(code, message);
+
+    public new Result<T> SetFromAnother(Result other)
+    {
+        base.SetFromAnother(other);
+        return this;
+    }
+
+    public new Result<T> SetBusinessMessage(string message)
+    {
+        base.SetBusinessMessage(message);
+        return this;
+    }
 }

@@ -1,22 +1,21 @@
-using EnterpriseFlow.Domain.SeedWork;
+using EnterpriseFlow.Domain.AggregatesModel.PedidoAggregate;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace EnterpriseFlow.Infra.Data;
 
-public class ApplicationDbContext : DbContext, IUnitOfWork
+public class EnterpriseFlowDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public EnterpriseFlowDbContext(DbContextOptions<EnterpriseFlowDbContext> options)
         : base(options)
     {
     }
+
+    public DbSet<Pedido> Pedido { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
     }
-
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
-        await base.SaveChangesAsync(cancellationToken);
 }

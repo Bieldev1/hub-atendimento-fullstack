@@ -21,7 +21,7 @@ public static class HealthCheckConfigurations
         Log.Information("Starting HealthCheckConfigurations.ConfigureHealthChecks");
 
         services.AddHealthChecks()
-            .AddDbContextCheck<ApplicationDbContext>(name: "sql-server");
+            .AddDbContextCheck<EnterpriseFlowDbContext>(name: "sql-server");
 
         Log.Information("Finishing HealthCheckConfigurations.ConfigureHealthChecks");
 

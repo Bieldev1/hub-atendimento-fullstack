@@ -1,5 +1,7 @@
+using EnterpriseFlow.Domain.AggregatesModel.PedidoAggregate;
 using EnterpriseFlow.Domain.SeedWork;
 using EnterpriseFlow.Infra.Data;
+using EnterpriseFlow.Infra.Data.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -23,13 +25,16 @@ public static class DependencyInjectionConfigurations
         Log.Information("Starting DependencyInjectionConfigurations.ConfigureDependencyInjection");
 
         Assembly domainAssembly = typeof(IAggregateRoot).Assembly;
+        Assembly apiAssembly = typeof(DependencyInjectionConfigurations).Assembly;
 
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<EnterpriseFlowDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IPedidoRepository, PedidoRepository>();
 
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(domainAssembly));
+        // Commands, Queries e seus Handles/EventHandlers ficam em API/Application (mesmo assembly da API).
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(domainAssembly, apiAssembly));
 
         Log.Information("Finishing DependencyInjectionConfigurations.ConfigureDependencyInjection");
 

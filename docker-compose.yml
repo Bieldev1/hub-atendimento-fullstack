@@ -116,7 +116,9 @@ services:
     container_name: enterpriseflow-backend
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=EnterpriseFlow;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=EnterpriseFlow;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;Encrypt=False;"
+      Mongo__ConnectionString: "mongodb://${MONGO_INITDB_ROOT_USERNAME:-admin}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/?authSource=admin"
+      Mongo__DatabaseName: "EnterpriseFlow"
       Cors__AllowedOrigins__0: "http://localhost:3000"
     ports:
       - "5000:80"

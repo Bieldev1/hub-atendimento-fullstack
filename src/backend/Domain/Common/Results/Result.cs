@@ -30,6 +30,18 @@ public class Result
 
     public virtual Result SetBusinessMessage(string message) => Set(ResultCode.BusinessError, message);
 
+    /// <summary>
+    /// Copia o código e a mensagem de outro Result. Usado para propagar uma falha de uma
+    /// operação interna (ex.: validação de domínio, SaveChanges) para o Result do handler.
+    /// </summary>
+    public virtual Result SetFromAnother(Result other)
+    {
+        if (other is null)
+            return this;
+
+        return Set(other.ResultCode, other.Message);
+    }
+
     public virtual Result AddValidation(string message)
     {
         if (string.IsNullOrWhiteSpace(message))
